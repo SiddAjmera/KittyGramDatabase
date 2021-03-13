@@ -1,15 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EMPTY, Observable, Subject } from 'rxjs';
+import { catchError, filter, switchMap, takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, of, Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { catchError, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth/auth.service';
+import { DatabaseService } from './../../services/database/database.service';
 import { FEED } from '../../consts/routes.const';
 import { MEDIA_STORAGE_PATH } from '../../consts/storage.const';
 import { StorageService } from '../../services/storage/storage.service';
+import { UserPost } from './../../models/user-post.model';
 import { UtilService } from '../../services/util/util.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create',
@@ -27,6 +29,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly databaseService: DatabaseService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly snackBar: MatSnackBar,
@@ -69,13 +72,25 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     downloadUrl$
       .pipe(
-        takeUntil(this.destroy$),
+        switchMap((photoUrl: string) => {
+          const userPost: UserPost = {
+            userAvatar: this.user.photoURL,
+            userName: this.user.displayName,
+            lastUpdated: new Date().getTime(),
+            photoUrl,
+            description: this.pictureForm.value.description,
+            purrs: 0,
+          };
+          return this.databaseService.addUserPost(userPost);
+        }),
         catchError((error) => {
           this.snackBar.open(`${error.message} 😢`, 'Close', {
             duration: 4000,
           });
-          return EMPTY;
+          return of(null);
         }),
+        filter((res) => res),
+        takeUntil(this.destroy$),
       )
       .subscribe((downloadUrl) => {
         this.submitted = false;

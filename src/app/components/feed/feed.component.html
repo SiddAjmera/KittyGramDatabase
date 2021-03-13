@@ -1,1 +1,10 @@
-<img alt="Feed" class="placeholder-image" src="/assets/feed.png" />
+<div class="container">
+  <ng-container *ngIf="userPosts$ | async as userPosts">
+    <app-feed-item
+      *ngFor="let userPost of userPosts"
+      [userPost]="userPost"
+      (purrClick)="handlePurrClick($event)"
+    >
+    </app-feed-item>
+  </ng-container>
+</div>

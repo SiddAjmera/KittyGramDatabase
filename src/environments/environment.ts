@@ -5,14 +5,14 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'YOUR apiKey HERE',
-    authDomain: 'YOUR authDomain HERE',
-    databaseURL: 'YOUR databaseURL HERE',
-    projectId: 'YOUR projectId HERE',
-    storageBucket: 'YOUR storageBucket HERE',
-    messagingSenderId: 'YOUR messagingSenderId HERE',
-    appId: 'YOUR appId HERE',
-    measurementId: 'YOUR measurementId HERE',
+    apiKey: 'AIzaSyBgUSXDOtaXdxz0WBNncHNF_qQT11UcMW0',
+    authDomain: 'kittygramauth.firebaseapp.com',
+    databaseURL: 'https://kittygramauth.firebaseio.com',
+    projectId: 'kittygramauth',
+    storageBucket: 'kittygramauth.appspot.com',
+    messagingSenderId: '754906639017',
+    appId: '1:754906639017:web:1d6eafaf2a7bb49f2317b8',
+    measurementId: 'G-2PJ0R54LNX',
   },
 };
 
